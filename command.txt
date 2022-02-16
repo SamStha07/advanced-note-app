@@ -1,0 +1,9 @@
+install typeorm globally
+Step 1:
+typeorm init --name server --database postgres --docker
+
+Install other libraries
+yarn add express apollo-server jsonwebtoken type-graphql cors morgan
+
+@types will always be in devDependencies
+yarn add -D @types/morgan @types/jsonwebtoken
