@@ -1,24 +1,24 @@
-import { ApolloServer } from 'apollo-server-express';
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
-import http from 'http';
+import { ApolloServer } from 'apollo-server-express';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import 'dotenv/config';
 import express from 'express';
-import morgan, { token } from 'morgan';
+import http from 'http';
+import { verify } from 'jsonwebtoken';
+import morgan from 'morgan';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { createConnection } from 'typeorm';
 import { constants } from './constants';
-import { UserResolver } from './graphql/user';
-import { MyContext } from './types';
-import cookieParser from 'cookie-parser';
-import { verify } from 'jsonwebtoken';
 import { User } from './entity/User';
+import { UserResolver } from './graphql/user';
 import {
   generateAccessToken,
   generateRefreshToken,
   sendRefreshToken,
 } from './helpers/generateToken';
+import { MyContext } from './types';
 
 createConnection()
   .then(async (connection) => {
@@ -29,15 +29,15 @@ createConnection()
     app.use(
       cors({
         credentials: true,
-        origin: 'https://studio.apollographql.com',
+        origin: ['https://studio.apollographql.com', 'http://localhost:3000'],
       })
     );
     app.use(morgan('dev'));
     app.use(cookieParser());
 
     app.post('/refresh_token', async (req, res) => {
-      // console.log('cookie', req.cookies);
-      const token = req.cookies.refresh_token;
+      console.log('cookie', req.cookies);
+      const token = req.cookies.refreshToken;
 
       if (!token) {
         return res.send({ ok: false, accessToken: '' });
@@ -59,6 +59,7 @@ createConnection()
       if (!user) {
         return res.send({ ok: false, accessToken: '' });
       }
+      console.log('token version', user.tokenVersion);
 
       if (user.tokenVersion !== payload.tokenVersion) {
         return res.send({ ok: false, accessToken: '' });
@@ -82,7 +83,10 @@ createConnection()
 
     await apolloServer.start();
 
-    apolloServer.applyMiddleware({ app, cors: false });
+    apolloServer.applyMiddleware({
+      app,
+      cors: false,
+    });
     await new Promise<void>((resolve) =>
       httpServer.listen({ port: 4000 }, resolve)
     );

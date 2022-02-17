@@ -8,6 +8,7 @@ import {
   ObjectType,
   Query,
   Resolver,
+  UseMiddleware,
 } from 'type-graphql';
 import { getConnection } from 'typeorm';
 import { User } from '../../entity/User';
@@ -16,6 +17,7 @@ import {
   generateRefreshToken,
   sendRefreshToken,
 } from '../../helpers/generateToken';
+import { isAuth } from '../../helpers/isAuth';
 import { MyContext } from '../../types';
 
 @ObjectType()
@@ -34,13 +36,18 @@ export class UserResolver {
     return 'hello world';
   }
 
-  @Mutation(() => Boolean)
-  async revokeRefreshTokenForUser(@Arg('userId') userId: string) {
-    await getConnection()
-      .getRepository(User)
-      .increment({ id: userId }, 'tokenVersion', 1);
+  @Query(() => User, { nullable: true })
+  @UseMiddleware(isAuth)
+  async me(@Ctx() { tokenPayload }: MyContext) {
+    if (!tokenPayload) return null;
 
-    return true;
+    try {
+      const user = await User.findOne(tokenPayload.userId);
+      return user;
+    } catch (error) {
+      console.log('error ', error);
+      return null;
+    }
   }
 
   @Mutation(() => User)
@@ -95,5 +102,14 @@ export class UserResolver {
     } catch (error) {
       throw new Error(error.message);
     }
+  }
+
+  @Mutation(() => Boolean)
+  async revokeRefreshTokenForUser(@Arg('userId') userId: string) {
+    await getConnection()
+      .getRepository(User)
+      .increment({ id: userId }, 'tokenVersion', 1);
+
+    return true;
   }
 }
