@@ -6,13 +6,13 @@ import {
   BaseEntity,
   CreateDateColumn,
   UpdateDateColumn,
-  OneToMany,
+  ManyToOne,
 } from 'typeorm';
-import { Note } from './Note';
+import { User } from './User';
 
 @ObjectType()
 @Entity()
-export class User extends BaseEntity {
+export class Note extends BaseEntity {
   @Field(() => String)
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -27,21 +27,14 @@ export class User extends BaseEntity {
 
   @Field(() => String)
   @Column()
-  email: string;
+  title: string;
 
   @Field(() => String)
-  @Column()
-  username: string;
+  @Column('text')
+  content: string;
 
-  //we arenot adding Field here because we dont want to expose password to graphql/client
-  @Column()
-  password: string;
-
-  @Column('int', { default: 0 })
-  tokenVersion: number;
-
-  // single user can have multiple Notes
-  @Field(() => Note)
-  @OneToMany(() => Note, (note) => note.createdBy)
-  notes: Note[];
+  // each/multiple note is owned by only one single  user
+  @Field(() => User)
+  @ManyToOne(() => User, (user) => user.id)
+  createdBy: string;
 }

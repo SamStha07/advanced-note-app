@@ -36,6 +36,7 @@ export class UserResolver {
     return 'hello world';
   }
 
+  // current user
   @Query(() => User, { nullable: true })
   @UseMiddleware(isAuth)
   async me(@Ctx() { tokenPayload }: MyContext) {

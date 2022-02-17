@@ -12,6 +12,7 @@ import { buildSchema } from 'type-graphql';
 import { createConnection } from 'typeorm';
 import { constants } from './constants';
 import { User } from './entity/User';
+import { NoteResolver } from './graphql/note';
 import { UserResolver } from './graphql/user';
 import {
   generateAccessToken,
@@ -75,7 +76,7 @@ createConnection()
 
     const apolloServer = new ApolloServer({
       schema: await buildSchema({
-        resolvers: [UserResolver],
+        resolvers: [UserResolver, NoteResolver],
       }),
       plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
       context: ({ req, res }): MyContext => ({ req, res }),

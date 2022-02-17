@@ -10,7 +10,7 @@ export const generateAccessToken = (user: User) => {
     },
     constants.ACCESS_TOKEN_SECRET,
     {
-      expiresIn: '15min',
+      expiresIn: '1d',
     }
   );
 };
