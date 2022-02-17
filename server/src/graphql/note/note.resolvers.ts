@@ -59,13 +59,19 @@ export class NoteResolver {
   async updateNote(
     @Arg('title') title: string,
     @Arg('content') content: string,
-    @Arg('noteId') noteId: string
+    @Arg('noteId') noteId: string,
+    @Ctx() { tokenPayload }: MyContext
   ): Promise<Note> {
     try {
-      const note = await Note.findOne(
+      const note: any = await Note.findOne(
         { id: noteId },
         { relations: ['createdBy'] }
       );
+
+      // checking if the owner of note is same as the current logged in user
+      if (note!.createdBy.id !== tokenPayload?.userId) {
+        throw new Error('You arenot authorized to update');
+      }
 
       if (!note) throw new Error('Note not found with this id');
 
@@ -82,12 +88,20 @@ export class NoteResolver {
 
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
-  async deleteNote(@Arg('noteId') noteId: string): Promise<Boolean> {
+  async deleteNote(
+    @Arg('noteId') noteId: string,
+    @Ctx() { tokenPayload }: MyContext
+  ): Promise<Boolean> {
     try {
-      const note = await Note.findOne(
+      const note: any = await Note.findOne(
         { id: noteId },
         { relations: ['createdBy'] }
       );
+
+      // checking if the owner of note is same as the current logged in user
+      if (note!.createdBy.id !== tokenPayload?.userId) {
+        throw new Error('You arenot authorized to delete');
+      }
 
       if (!note) throw new Error('Note not found with this id');
 
