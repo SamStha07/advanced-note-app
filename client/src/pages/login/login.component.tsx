@@ -22,20 +22,15 @@ const LoginPage = () => {
   const [loginMutation, { loading, error }] = useLoginMutation();
 
   const onSubmitHandler = async (data: FormData) => {
-    try {
-      const response = await loginMutation({
-        variables: data,
-      });
+    const response = await loginMutation({
+      variables: data,
+    });
 
-      toast.success('Successfully logged in!');
+    toast.success('Successfully logged in!');
 
-      const token = response?.data?.login?.access_token!;
-      saveToken(token);
-      navigate('/');
-    } catch (err) {
-      console.error(err);
-      toast.error('Something went wrong!');
-    }
+    const token = response?.data?.login?.access_token!;
+    saveToken(token);
+    navigate('/');
   };
 
   return (

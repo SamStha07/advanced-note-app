@@ -21,16 +21,12 @@ const LoginPage = () => {
   const [signupMutation, { loading, error }] = useRegisterMutation();
 
   const onSubmitHandler = async (data: FormData) => {
-    try {
-      await signupMutation({
-        variables: data,
-      });
+    await signupMutation({
+      variables: data,
+    });
 
-      toast.success('Successfully! Please login');
-      navigate('/login');
-    } catch (err) {
-      console.error(err);
-    }
+    toast.success('Successfully registered! Please login');
+    navigate('/login');
   };
 
   return (

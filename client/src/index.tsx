@@ -35,7 +35,6 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
 const client = new ApolloClient({
   link: from([errorLink, httpLink]),
-  // uri: GRAPHQL_URL,
   credentials: 'include',
   cache: new InMemoryCache(),
   // connectToDevTools: true,

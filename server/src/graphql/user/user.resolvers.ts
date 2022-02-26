@@ -3,7 +3,6 @@ import {
   Arg,
   Ctx,
   Field,
-  Int,
   Mutation,
   ObjectType,
   Query,

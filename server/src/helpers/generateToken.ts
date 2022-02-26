@@ -1,6 +1,6 @@
+import { Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { constants } from '../constants';
-import { Response } from 'express';
 import { User } from '../entity/User';
 
 export const generateAccessToken = (user: User) => {
