@@ -10,6 +10,7 @@ import {
   UseMiddleware,
 } from 'type-graphql';
 import { getConnection } from 'typeorm';
+import { constants } from '../../constants';
 import { User } from '../../entity/User';
 import {
   generateAccessToken,
@@ -110,6 +111,12 @@ export class UserResolver {
       .getRepository(User)
       .increment({ id: userId }, 'tokenVersion', 1);
 
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  async logout(@Ctx() { res }: MyContext) {
+    res.clearCookie(constants.ACCESS_TOKEN_SECRET);
     return true;
   }
 }

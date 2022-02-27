@@ -10,7 +10,7 @@ export const generateAccessToken = (user: User) => {
     },
     constants.ACCESS_TOKEN_SECRET,
     {
-      expiresIn: '1d',
+      expiresIn: '15m',
     }
   );
 };
@@ -31,5 +31,9 @@ export const generateRefreshToken = (user: User) => {
 export const sendRefreshToken = (res: Response, token: string) => {
   res.cookie('refreshToken', token, {
     httpOnly: true,
+    // this fields are mandatory to store cookies in the browser while suing apollo explorer
+    secure: true,
+    maxAge: 1000 * 60 * 30,
+    sameSite: 'none',
   });
 };

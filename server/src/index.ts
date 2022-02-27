@@ -33,15 +33,17 @@ createConnection()
         origin: ['https://studio.apollographql.com', 'http://localhost:3000'],
       })
     );
-    app.use(morgan('dev'));
+
+    app.use(morgan('dev')); // logger
     app.use(cookieParser());
 
     app.post('/refresh_token', async (req, res) => {
-      console.log('cookie', req.cookies);
+      // console.log('body', req?.body);
       const token = req.cookies.refreshToken;
+      // const token = req.body.token;
 
       if (!token) {
-        return res.send({ ok: false, accessToken: '' });
+        return res.send({ success: false, accessToken: '' });
       }
 
       // token hasnot expired  and its valid
@@ -50,7 +52,7 @@ createConnection()
         payload = verify(token, constants.REFRESH_TOKEN_SECRET);
       } catch (error) {
         console.log(error);
-        return res.send({ ok: false, accessToken: '' });
+        return res.send({ success: false, accessToken: '' });
       }
 
       // token is valid and
@@ -58,18 +60,23 @@ createConnection()
       const user = await User.findOne({ id: payload.userId });
 
       if (!user) {
-        return res.send({ ok: false, accessToken: '' });
+        return res.send({ success: false, accessToken: '' });
       }
       console.log('token version', user.tokenVersion);
 
       if (user.tokenVersion !== payload.tokenVersion) {
-        return res.send({ ok: false, accessToken: '' });
+        return res.send({ success: false, accessToken: '' });
       }
 
       // if our accessToken expires then will send back new accessToken
       sendRefreshToken(res, generateRefreshToken(user));
 
-      return res.send({ ok: true, accessToken: generateAccessToken(user) });
+      console.log('accessToken', generateAccessToken(user));
+
+      return res.send({
+        success: true,
+        accessToken: generateAccessToken(user),
+      });
     });
 
     const httpServer = http.createServer(app);

@@ -1,10 +1,17 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { Layout } from './components';
+import { Layout, Loading } from './components';
+import { usePrepareApp } from './helpers/auth';
 import PublicRoute from './hoc/public.route';
 import { HomePage, LoginPage, SignUpPage } from './pages';
 
 function App() {
+  const { isLoading } = usePrepareApp();
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
     <BrowserRouter>
       <Layout>

@@ -1,0 +1,14 @@
+query listNotes {
+  listNotes {
+    id
+    content
+    title
+    createdBy {
+      id
+      username
+      email
+    }
+    createdAt
+    updatedAt
+  }
+}
