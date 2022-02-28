@@ -23,10 +23,16 @@ export class NoteResolver {
   @Query(() => [Note])
   @UseMiddleware(isAuth)
   async noteListForCurrentUser(
+    @Arg('orderBy', { defaultValue: 'DESC' }) orderBy: string,
     @Ctx() { tokenPayload }: MyContext
   ): Promise<Note[]> {
     const note = await Note.find({
-      createdBy: tokenPayload!.userId,
+      where: {
+        createdBy: tokenPayload!.userId,
+      },
+      order: {
+        createdAt: orderBy === 'DESC' ? 'DESC' : 'ASC',
+      },
     });
     return note;
   }

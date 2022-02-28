@@ -97,6 +97,21 @@ export type User = {
   username: Scalars['String'];
 };
 
+export type CreateNoteMutationVariables = Exact<{
+  content: Scalars['String'];
+  title: Scalars['String'];
+}>;
+
+
+export type CreateNoteMutation = { __typename?: 'Mutation', createNote: { __typename?: 'Note', id: string, title: string, content: string, createdAt: any, updatedAt: any } };
+
+export type DeleteNoteMutationVariables = Exact<{
+  noteId: Scalars['String'];
+}>;
+
+
+export type DeleteNoteMutation = { __typename?: 'Mutation', deleteNote: boolean };
+
 export type ListNotesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -133,7 +148,85 @@ export type RegisterMutationVariables = Exact<{
 
 export type RegisterMutation = { __typename?: 'Mutation', signup: { __typename?: 'User', email: string, id: string, username: string, createdAt: any } };
 
+export type EditNoteMutationVariables = Exact<{
+  noteId: Scalars['String'];
+  content: Scalars['String'];
+  title: Scalars['String'];
+}>;
 
+
+export type EditNoteMutation = { __typename?: 'Mutation', updateNote: { __typename?: 'Note', id: string, content: string, title: string, createdAt: any, updatedAt: any, createdBy: { __typename?: 'User', id: string, email: string, username: string, createdAt: any, updatedAt: any } } };
+
+
+export const CreateNoteDocument = gql`
+    mutation createNote($content: String!, $title: String!) {
+  createNote(content: $content, title: $title) {
+    id
+    title
+    content
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export type CreateNoteMutationFn = Apollo.MutationFunction<CreateNoteMutation, CreateNoteMutationVariables>;
+
+/**
+ * __useCreateNoteMutation__
+ *
+ * To run a mutation, you first call `useCreateNoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateNoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createNoteMutation, { data, loading, error }] = useCreateNoteMutation({
+ *   variables: {
+ *      content: // value for 'content'
+ *      title: // value for 'title'
+ *   },
+ * });
+ */
+export function useCreateNoteMutation(baseOptions?: Apollo.MutationHookOptions<CreateNoteMutation, CreateNoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateNoteMutation, CreateNoteMutationVariables>(CreateNoteDocument, options);
+      }
+export type CreateNoteMutationHookResult = ReturnType<typeof useCreateNoteMutation>;
+export type CreateNoteMutationResult = Apollo.MutationResult<CreateNoteMutation>;
+export type CreateNoteMutationOptions = Apollo.BaseMutationOptions<CreateNoteMutation, CreateNoteMutationVariables>;
+export const DeleteNoteDocument = gql`
+    mutation deleteNote($noteId: String!) {
+  deleteNote(noteId: $noteId)
+}
+    `;
+export type DeleteNoteMutationFn = Apollo.MutationFunction<DeleteNoteMutation, DeleteNoteMutationVariables>;
+
+/**
+ * __useDeleteNoteMutation__
+ *
+ * To run a mutation, you first call `useDeleteNoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteNoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteNoteMutation, { data, loading, error }] = useDeleteNoteMutation({
+ *   variables: {
+ *      noteId: // value for 'noteId'
+ *   },
+ * });
+ */
+export function useDeleteNoteMutation(baseOptions?: Apollo.MutationHookOptions<DeleteNoteMutation, DeleteNoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteNoteMutation, DeleteNoteMutationVariables>(DeleteNoteDocument, options);
+      }
+export type DeleteNoteMutationHookResult = ReturnType<typeof useDeleteNoteMutation>;
+export type DeleteNoteMutationResult = Apollo.MutationResult<DeleteNoteMutation>;
+export type DeleteNoteMutationOptions = Apollo.BaseMutationOptions<DeleteNoteMutation, DeleteNoteMutationVariables>;
 export const ListNotesDocument = gql`
     query listNotes {
   listNotes {
@@ -361,3 +454,49 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const EditNoteDocument = gql`
+    mutation editNote($noteId: String!, $content: String!, $title: String!) {
+  updateNote(noteId: $noteId, content: $content, title: $title) {
+    id
+    content
+    title
+    createdAt
+    updatedAt
+    createdBy {
+      id
+      email
+      username
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `;
+export type EditNoteMutationFn = Apollo.MutationFunction<EditNoteMutation, EditNoteMutationVariables>;
+
+/**
+ * __useEditNoteMutation__
+ *
+ * To run a mutation, you first call `useEditNoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditNoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editNoteMutation, { data, loading, error }] = useEditNoteMutation({
+ *   variables: {
+ *      noteId: // value for 'noteId'
+ *      content: // value for 'content'
+ *      title: // value for 'title'
+ *   },
+ * });
+ */
+export function useEditNoteMutation(baseOptions?: Apollo.MutationHookOptions<EditNoteMutation, EditNoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditNoteMutation, EditNoteMutationVariables>(EditNoteDocument, options);
+      }
+export type EditNoteMutationHookResult = ReturnType<typeof useEditNoteMutation>;
+export type EditNoteMutationResult = Apollo.MutationResult<EditNoteMutation>;
+export type EditNoteMutationOptions = Apollo.BaseMutationOptions<EditNoteMutation, EditNoteMutationVariables>;
