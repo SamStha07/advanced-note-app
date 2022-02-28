@@ -51,6 +51,14 @@ export const ListNotesStyle = styled.div`
           margin-bottom: 8px;
         }
 
+        .note-content {
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          text-overflow: ellipsis;
+          overflow: hidden;
+        }
+
         .note-title {
           color: ${GENERICS.colorBlackCalm};
           font-weight: bold;

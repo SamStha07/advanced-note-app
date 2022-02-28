@@ -49,7 +49,7 @@ const refreshLink = new TokenRefreshLink({
   },
   handleError: (err) => {
     console.warn('Your refresh token is invalid. Try to relogin');
-    console.error(err);
+    // console.error(err);
   },
 });
 
@@ -59,7 +59,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
       console.log(
         `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
       );
-      return toast.error(message);
+      // return toast.error(message);
     });
 
   if (networkError) console.log(`[Network error]: ${networkError}`);

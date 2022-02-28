@@ -6,6 +6,7 @@ import {
   Resolver,
   UseMiddleware,
 } from 'type-graphql';
+import { ILike } from 'typeorm';
 import { Note } from '../../entity/Note';
 import { User } from '../../entity/User';
 import { isAuth } from '../../helpers/isAuth';
@@ -23,13 +24,16 @@ export class NoteResolver {
   @Query(() => [Note])
   @UseMiddleware(isAuth)
   async noteListForCurrentUser(
+    @Arg('search', { defaultValue: '' }) search: string,
     @Arg('orderBy', { defaultValue: 'DESC' }) orderBy: string,
     @Ctx() { tokenPayload }: MyContext
   ): Promise<Note[]> {
     const note = await Note.find({
       where: {
-        createdBy: tokenPayload!.userId,
+        title: ILike(`%${search}%`),
+        createdBy: tokenPayload?.userId,
       },
+      relations: ['createdBy'],
       order: {
         createdAt: orderBy === 'DESC' ? 'DESC' : 'ASC',
       },

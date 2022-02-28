@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ListNotesForCurrentUserDocument,
@@ -7,18 +8,22 @@ import {
 } from '../../generated/graphql';
 
 const useNavigation = () => {
+  const [search, setSearch] = useState('');
   const navigate = useNavigate();
   const { data: userData } = useMeQuery();
-  const [submitLogout, { client }] = useLogoutMutation();
+  const [submitLogout] = useLogoutMutation();
 
   // refetchQueries will refetch our current user list if new notes in created
-  const [createNote] = useCreateNoteMutation({
-    refetchQueries: [
-      ListNotesForCurrentUserDocument, // DocumentNode object parsed with gql
-    ],
-  });
+  const [createNote] = useCreateNoteMutation();
 
-  return { submitLogout, client, userData, navigate, createNote };
+  return {
+    submitLogout,
+    userData,
+    navigate,
+    createNote,
+    search,
+    setSearch,
+  };
 };
 
 export default useNavigation;

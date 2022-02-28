@@ -87,6 +87,12 @@ export type Query = {
   noteListForCurrentUser: Array<Note>;
 };
 
+
+export type QueryNoteListForCurrentUserArgs = {
+  orderBy?: InputMaybe<Scalars['String']>;
+  search?: InputMaybe<Scalars['String']>;
+};
+
 export type User = {
   __typename?: 'User';
   createdAt: Scalars['DateTime'];
@@ -117,7 +123,10 @@ export type ListNotesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ListNotesQuery = { __typename?: 'Query', listNotes: Array<{ __typename?: 'Note', id: string, content: string, title: string, createdAt: any, updatedAt: any, createdBy: { __typename?: 'User', id: string, username: string, email: string } }> };
 
-export type ListNotesForCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
+export type ListNotesForCurrentUserQueryVariables = Exact<{
+  orderBy?: InputMaybe<Scalars['String']>;
+  search?: InputMaybe<Scalars['String']>;
+}>;
 
 
 export type ListNotesForCurrentUserQuery = { __typename?: 'Query', noteListForCurrentUser: Array<{ __typename?: 'Note', id: string, content: string, title: string, createdAt: any, updatedAt: any }> };
@@ -155,7 +164,7 @@ export type EditNoteMutationVariables = Exact<{
 }>;
 
 
-export type EditNoteMutation = { __typename?: 'Mutation', updateNote: { __typename?: 'Note', id: string, content: string, title: string, createdAt: any, updatedAt: any, createdBy: { __typename?: 'User', id: string, email: string, username: string, createdAt: any, updatedAt: any } } };
+export type EditNoteMutation = { __typename?: 'Mutation', updateNote: { __typename?: 'Note', id: string, content: string, title: string, createdAt: any, updatedAt: any, createdBy: { __typename?: 'User', id: string, email: string, username: string } } };
 
 
 export const CreateNoteDocument = gql`
@@ -271,8 +280,8 @@ export type ListNotesQueryHookResult = ReturnType<typeof useListNotesQuery>;
 export type ListNotesLazyQueryHookResult = ReturnType<typeof useListNotesLazyQuery>;
 export type ListNotesQueryResult = Apollo.QueryResult<ListNotesQuery, ListNotesQueryVariables>;
 export const ListNotesForCurrentUserDocument = gql`
-    query listNotesForCurrentUser {
-  noteListForCurrentUser {
+    query listNotesForCurrentUser($orderBy: String, $search: String) {
+  noteListForCurrentUser(orderBy: $orderBy, search: $search) {
     id
     content
     title
@@ -294,6 +303,8 @@ export const ListNotesForCurrentUserDocument = gql`
  * @example
  * const { data, loading, error } = useListNotesForCurrentUserQuery({
  *   variables: {
+ *      orderBy: // value for 'orderBy'
+ *      search: // value for 'search'
  *   },
  * });
  */
@@ -466,8 +477,6 @@ export const EditNoteDocument = gql`
       id
       email
       username
-      createdAt
-      updatedAt
     }
   }
 }

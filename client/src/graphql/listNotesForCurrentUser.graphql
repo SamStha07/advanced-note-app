@@ -1,5 +1,5 @@
-query listNotesForCurrentUser {
-  noteListForCurrentUser {
+query listNotesForCurrentUser($orderBy: String, $search: String) {
+  noteListForCurrentUser(orderBy: $orderBy, search: $search) {
     id
     content
     title

@@ -9,8 +9,6 @@ mutation editNote($noteId: String!, $content: String!, $title: String!) {
       id
       email
       username
-      createdAt
-      updatedAt
     }
   }
 }

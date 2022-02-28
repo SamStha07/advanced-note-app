@@ -1,13 +1,36 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FaBook, FaPlus, FaSearch, FaSignOutAlt } from 'react-icons/fa';
-import { ListNotesDocument } from '../../generated/graphql';
+import {
+  ListNotesDocument,
+  ListNotesForCurrentUserDocument,
+  useListNotesForCurrentUserQuery,
+} from '../../generated/graphql';
 import { clearToken } from '../../helpers/auth';
+import { debounceFn } from '../../helpers/debounce';
 import { NavigationStyled } from './navigation.style';
 import useNavigation from './useNavigation';
 
 const Navigation = () => {
-  const { submitLogout, client, userData, navigate, createNote } =
+  const { submitLogout, userData, navigate, createNote, search, setSearch } =
     useNavigation();
+  const { refetch, client } = useListNotesForCurrentUserQuery();
+
+  const onSearchHandler = debounceFn(async () => {
+    await refetch({ search: search }).then(
+      ({ data: { noteListForCurrentUser } }) => {
+        client.writeQuery({
+          query: ListNotesForCurrentUserDocument,
+          data: {
+            noteListForCurrentUser,
+          },
+        });
+      }
+    );
+  }, 1000);
+
+  useEffect(() => {
+    onSearchHandler();
+  }, [search]);
 
   const onLogoutHandler = async () => {
     await submitLogout();
@@ -22,6 +45,9 @@ const Navigation = () => {
         title: 'Title',
         content: 'Content',
       },
+      refetchQueries: [
+        ListNotesForCurrentUserDocument, // DocumentNode object parsed with gql
+      ],
     });
     // another method to update our current user notes list
     // const { listNotes } = client.readQuery({ query: ListNotesDocument });
@@ -46,8 +72,8 @@ const Navigation = () => {
         <FaSearch />
         <input
           placeholder='Search'
-          // value={searchText}
-          // onChange={({ target }) => setSearchText(target.value)}
+          value={search}
+          onChange={({ target }) => setSearch(target.value)}
         />
       </div>
 
