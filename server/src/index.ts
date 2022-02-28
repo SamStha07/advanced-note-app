@@ -39,8 +39,9 @@ createConnection()
 
     app.post('/refresh_token', async (req, res) => {
       // console.log('body', req?.body);
-      const token = req.cookies.refreshToken;
+      const token = req.cookies[constants.JWT_COOKIE];
       // const token = req.body.token;
+      console.log('cookie token', token);
 
       if (!token) {
         return res.send({ success: false, accessToken: '' });
@@ -70,8 +71,6 @@ createConnection()
 
       // if our accessToken expires then will send back new accessToken
       sendRefreshToken(res, generateRefreshToken(user));
-
-      console.log('accessToken', generateAccessToken(user));
 
       return res.send({
         success: true,

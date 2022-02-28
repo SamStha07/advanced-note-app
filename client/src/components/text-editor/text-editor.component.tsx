@@ -1,29 +1,30 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { Note } from '../../generated/graphql';
+import { ListNoteProps } from '../../types';
 import { EditorContainer } from './text-editor.style';
 
-const TextEditor = () => {
-  const [noteValue, setNoteValue] = useState({
-    title: '',
-    content: '',
-  });
-
-  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
-
+const TextEditor: React.FC<ListNoteProps> = ({
+  selectedNote,
+  setNoteValue,
+  noteValue,
+}) => {
   const onChangeHandlerInput = (event: ChangeEvent<HTMLInputElement>) => {
-    setNoteValue({ ...noteValue, title: event.target.value });
+    setNoteValue((prevValue: any) => ({
+      ...prevValue,
+      title: event.target.value,
+    }));
   };
 
   const onChangehandlerQuill = (value: string) => {
-    setNoteValue({ ...noteValue, content: value });
+    setNoteValue((prevValue: any) => ({ ...prevValue, content: value }));
   };
 
   return (
-    <EditorContainer disabled={false}>
+    <EditorContainer disabled={!selectedNote}>
       <input
         value={noteValue.title}
+        disabled={!selectedNote}
         placeholder='Title'
         onChange={onChangeHandlerInput}
       />

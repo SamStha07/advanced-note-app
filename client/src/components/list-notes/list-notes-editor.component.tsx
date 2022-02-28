@@ -2,34 +2,49 @@ import dayjs from 'dayjs';
 import React from 'react';
 import { ListNotesStyle } from './list-notes.style';
 import { FaSortDown, FaSortUp, FaTrash } from 'react-icons/fa';
-import { useListNotesQuery } from '../../generated/graphql';
+import { Note, useListNotesForCurrentUserQuery } from '../../generated/graphql';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { ListNoteProps } from '../../types';
 
 dayjs.extend(relativeTime);
 
-const ListNotesEditor = () => {
-  const { data, refetch } = useListNotesQuery();
-  console.log('data', data);
+const ListNotesEditor: React.FC<ListNoteProps> = ({
+  setSelectedNote,
+  selectedNote,
+  setNoteValue,
+}) => {
+  // const { data, refetch } = useListNotesQuery();
+  const { data } = useListNotesForCurrentUserQuery();
+
+  const onSelectNoteHandler = (note: Note) => {
+    setNoteValue({
+      title: note.title,
+      content: note.content,
+    });
+    setSelectedNote(note);
+  };
 
   return (
     <ListNotesStyle>
       <h2>All Notes</h2>
       <div className='note-filter'>
-        <span>{data?.listNotes.length} Notes</span>
+        <span>{data?.noteListForCurrentUser.length} Notes</span>
 
         <div className='filters'>
           {/* <span onClick={onClickOrderHandler}>
             {orderBy === 'DESC' ? <FaSortDown /> : <FaSortUp />}
           </span> */}
+          <span>
+            <FaSortDown />
+          </span>
         </div>
       </div>
       <div className='list-notes'>
-        {data?.listNotes.map((note) => (
+        {data?.noteListForCurrentUser?.map((note) => (
           <div
             key={note.id}
-            className='note'
-            // className={`note${selectedNote?.id === note.id ? ' active' : ''}`}
-            // onClick={onSelectNoteHandler(note as any)}
+            className={`note${selectedNote?.id === note.id ? ' active' : ''}`}
+            onClick={() => onSelectNoteHandler(note as Note)}
           >
             <div className='note-detail'>
               <div className='note-title'>{note.title || 'Title'}</div>

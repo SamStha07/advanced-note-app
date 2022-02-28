@@ -102,6 +102,11 @@ export type ListNotesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ListNotesQuery = { __typename?: 'Query', listNotes: Array<{ __typename?: 'Note', id: string, content: string, title: string, createdAt: any, updatedAt: any, createdBy: { __typename?: 'User', id: string, username: string, email: string } }> };
 
+export type ListNotesForCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ListNotesForCurrentUserQuery = { __typename?: 'Query', noteListForCurrentUser: Array<{ __typename?: 'Note', id: string, content: string, title: string, createdAt: any, updatedAt: any }> };
+
 export type LoginMutationVariables = Exact<{
   password: Scalars['String'];
   email: Scalars['String'];
@@ -172,6 +177,44 @@ export function useListNotesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
 export type ListNotesQueryHookResult = ReturnType<typeof useListNotesQuery>;
 export type ListNotesLazyQueryHookResult = ReturnType<typeof useListNotesLazyQuery>;
 export type ListNotesQueryResult = Apollo.QueryResult<ListNotesQuery, ListNotesQueryVariables>;
+export const ListNotesForCurrentUserDocument = gql`
+    query listNotesForCurrentUser {
+  noteListForCurrentUser {
+    id
+    content
+    title
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useListNotesForCurrentUserQuery__
+ *
+ * To run a query within a React component, call `useListNotesForCurrentUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useListNotesForCurrentUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useListNotesForCurrentUserQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useListNotesForCurrentUserQuery(baseOptions?: Apollo.QueryHookOptions<ListNotesForCurrentUserQuery, ListNotesForCurrentUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ListNotesForCurrentUserQuery, ListNotesForCurrentUserQueryVariables>(ListNotesForCurrentUserDocument, options);
+      }
+export function useListNotesForCurrentUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListNotesForCurrentUserQuery, ListNotesForCurrentUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ListNotesForCurrentUserQuery, ListNotesForCurrentUserQueryVariables>(ListNotesForCurrentUserDocument, options);
+        }
+export type ListNotesForCurrentUserQueryHookResult = ReturnType<typeof useListNotesForCurrentUserQuery>;
+export type ListNotesForCurrentUserLazyQueryHookResult = ReturnType<typeof useListNotesForCurrentUserLazyQuery>;
+export type ListNotesForCurrentUserQueryResult = Apollo.QueryResult<ListNotesForCurrentUserQuery, ListNotesForCurrentUserQueryVariables>;
 export const LoginDocument = gql`
     mutation login($password: String!, $email: String!) {
   login(password: $password, email: $email) {

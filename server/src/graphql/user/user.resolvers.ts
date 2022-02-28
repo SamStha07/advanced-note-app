@@ -116,7 +116,7 @@ export class UserResolver {
 
   @Mutation(() => Boolean)
   async logout(@Ctx() { res }: MyContext) {
-    res.clearCookie(constants.ACCESS_TOKEN_SECRET);
+    res.clearCookie(constants.JWT_COOKIE);
     return true;
   }
 }

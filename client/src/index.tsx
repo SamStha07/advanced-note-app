@@ -18,7 +18,6 @@ import { globalStyles } from './components/GlobalStyle';
 import { EXPRESS_URL, GRAPHQL_URL } from './constants';
 import { getToken, isAuthenticated, saveToken } from './helpers/auth';
 import reportWebVitals from './reportWebVitals';
-import axios from 'axios';
 
 const httpLink = new HttpLink({
   uri: GRAPHQL_URL,

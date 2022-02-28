@@ -1,0 +1,9 @@
+query listNotesForCurrentUser {
+  noteListForCurrentUser {
+    id
+    content
+    title
+    createdAt
+    updatedAt
+  }
+}
