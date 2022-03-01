@@ -6,7 +6,7 @@ This is an basic evernote clone which is used to take notes having features like
 3. Add new note
 4. Update note
 5. Delete note
-6. List of notes of current user
+6. List all the notes of current user
 7. Search list of current user notes
 
 # Stack used
