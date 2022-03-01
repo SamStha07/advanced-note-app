@@ -18,3 +18,5 @@ This is an basic evernote clone which is used to take notes having features like
 6. PostgreSQL
 7. Reactjs
 8. Apollo client
+
+![](Screenshot%20from%202022-03-01%2022-46-19.png)
